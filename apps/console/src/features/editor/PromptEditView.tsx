@@ -38,6 +38,8 @@ import { CommitPromptModal } from "~/components/prompts/CommitPromptModal";
 import { PublishPromptModal } from "~/components/prompts/PublishPromptModal";
 import { ChatEditMode } from "~/components/prompts/editor/chat/ChatEditMode";
 import { useWatch } from "react-hook-form";
+import { FunctionsEditor } from "~/components/prompts/editor/FunctionsEditor/FunctionsEditor";
+import { FunctionsFormModal } from "~/components/prompts/editor/FunctionsEditor/FunctionsFormModal";
 
 export const PromptEditView = () => {
   const {
@@ -49,6 +51,7 @@ export const PromptEditView = () => {
   } = useEditorContext();
   const { providerApiKeys } = useProviderApiKeys();
   const { openRequiredProviderApiKeyModal } = useRequiredProviderApiKeyModal();
+  const [editFunctionsModalOpen, setEditFunctionsModalOpen] = useState(false);
 
   const form = getForm();
   const [type] = useWatch({
@@ -182,6 +185,35 @@ export const PromptEditView = () => {
                   </CardHeader>
                   <CardContent>
                     <Variables />
+                  </CardContent>
+                </Card>
+                <Card className="flex flex-col gap-4 border">
+                  <CardHeader className="border-b border-muted p-4">
+                    <div className="flex w-full items-center justify-between">
+                      <p className="font-semibold">Functions</p>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger>
+                            <InfoIcon className="h-4 w-4 text-muted-foreground" />
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>
+                              You can specify variables using curly braces. For
+                              example - {`{someVariable}`}
+                            </p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <Button onClick={() => setEditFunctionsModalOpen(true)}>
+                      Edit Functions
+                    </Button>
+                    <FunctionsFormModal
+                      open={editFunctionsModalOpen}
+                      onClose={() => setEditFunctionsModalOpen(false)}
+                    />
                   </CardContent>
                 </Card>
               </div>

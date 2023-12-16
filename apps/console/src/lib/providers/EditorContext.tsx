@@ -20,6 +20,7 @@ import { getServiceDefaultSettings } from "~/components/prompts/editor/ProviderS
 import { useCurrentPrompt } from "./CurrentPromptContext";
 import { useGetPromptVersion } from "~/graphql/hooks/queries";
 import { findVariables } from "../utils/find-variables";
+import { ToolFunctionParameterSchema } from "~/components/prompts/editor/FunctionsEditor/types";
 
 const getDefaultContent = (type: PromptType) => {
   switch (type) {
@@ -53,6 +54,9 @@ const formSchema = z.object({
         })
       ),
     }),
+    z.object({
+      tools: z.array(ToolFunctionParameterSchema),
+    }),
   ]),
 });
 
@@ -61,6 +65,7 @@ export type EditorFormInputs = z.infer<typeof formSchema>;
 interface EditorContext {
   getForm: () => UseFormReturn<EditorFormInputs>;
   messagesArray: UseFieldArrayReturn<EditorFormInputs>;
+  toolsArray: UseFieldArrayReturn<EditorFormInputs>;
   variables: string[];
   isDraft: boolean;
   currentVersionSha: string;
@@ -101,6 +106,11 @@ export const EditorProvider = ({ children }) => {
   const messagesArray = useFieldArray<EditorFormInputs>({
     control: form.control,
     name: "content.messages",
+  });
+
+  const toolsArray = useFieldArray<EditorFormInputs>({
+    control: form.control,
+    name: "content.tools",
   });
 
   const [type, promptContent, chatContent] = useWatch({
@@ -184,6 +194,7 @@ export const EditorProvider = ({ children }) => {
       value={{
         getForm,
         messagesArray,
+        toolsArray,
         variables,
         isDraft,
         isPublishEnabled: !isDraft,

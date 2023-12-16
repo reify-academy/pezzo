@@ -15,11 +15,7 @@ export const FunctionsFormModal = ({ open, onClose }: Props) => {
       footer={false}
       width={"700px"}
     >
-      <FunctionsEditor
-        schema={{
-          functions: [],
-        }}
-      />
+      <FunctionsEditor />
     </Modal>
   );
 };
